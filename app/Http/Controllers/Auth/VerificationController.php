@@ -26,7 +26,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo ='/';
 
     /**
      * Create a new controller instance.
@@ -37,6 +37,7 @@ class VerificationController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
+        //为verify,resend动作做了频率限制 throttle是框架提供的访问频率限制功能 限制这两个动作一分钟之内访问频率不能超过6次
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 }
