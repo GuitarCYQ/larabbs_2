@@ -6,6 +6,12 @@ class Topic extends Model
 {
     protected $fillable = ['title', 'body',  'category_id', 'excerpt', 'slug'];
 
+    //一篇帖子下多条评论
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
     //一个话题属于一个分类
     public function category()
     {
@@ -50,7 +56,7 @@ class Topic extends Model
 
     public function link($params = [])
     {
-        return route('topics.show',array_merge([$this->id, $this->slug], $params));
+        return route('topics.show', array_merge([$this->id, $this->slug], $params));
     }
 
 }
