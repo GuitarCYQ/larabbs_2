@@ -13,8 +13,7 @@ class ReplyObserver
     //统计回复数 并保存
     public function created(Reply $reply)
     {
-        $reply->topic->reply_count = $reply->topic->replies->count();
-        $reply->topic->save();
+        $reply->topic->updateReplyCount();
 
         //通知话题作者有新的评论
         $reply->topic->user->notify(new TopicReplied($reply));
@@ -24,5 +23,13 @@ class ReplyObserver
     public function creating(Reply $reply)
     {
         $reply->content = clean($reply->content, 'user_topic_body');
+    }
+    
+    //监听回复删除之后 评论数也要减少
+    public function deleted(Reply $reply)
+    {
+        $reply->topic->reply_count = $reply->topic->replies->count();
+
+        $reply->topic->save();
     }
 }
