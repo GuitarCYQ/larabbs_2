@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Handlers\ImageUploadHandler;
 use App\Models\Category;
 use App\Models\Topic;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TopicRequest;
@@ -17,13 +18,14 @@ class TopicsController extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
-	public function index(Request $request, Topic $topic)
+	public function index(Request $request, Topic $topic, User $user)
 	{
 	    //$request->order 是获取 URI  http://larabbs.test/topics?order=recent 中的 order 参数。
 		$topics = $topic->withOrder($request->order)
                         ->with('user','category')//with 预加载 解决N+1问题
                         ->paginate(20);
-		return view('topics.index', compact('topics'));
+		$active_users = $user->getActiveUsers();
+		return view('topics.index', compact('topics','active_users'));
 	}
 
     public function show(Request $request, Topic $topic)
