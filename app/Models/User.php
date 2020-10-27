@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         if ( ! \Str::startsWith($path,'http')) {
 
             //拼接完整的URL
-            $path = config('app.url') . "uploads/images/avatars/$path";
+            $path = config('app.url') . "/uploads/images/avatars/$path";
         }
 
         $this->attributes['avatar'] = $path;
