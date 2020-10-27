@@ -13,10 +13,13 @@ class ReplyObserver
     //统计回复数 并保存
     public function created(Reply $reply)
     {
-        $reply->topic->updateReplyCount();
+        //命令行允许迁移时 不做这些操作
+        if ( ! app()->runningInConsole()) {
+            $reply->topic->updateReplyCount();
 
-        //通知话题作者有新的评论
-        $reply->topic->user->notify(new TopicReplied($reply));
+            //通知话题作者有新的评论
+            $reply->topic->user->notify(new TopicReplied($reply));
+        }
     }
 
     //防止 XSS
